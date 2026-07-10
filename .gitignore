@@ -1,0 +1,17 @@
+# Environment variables — never commit real secrets
+.env
+
+# Python cache files
+__pycache__/
+*.pyc
+
+# Database file — generated locally, shouldn't be in git
+students.db
+
+# Virtual environment
+venv/
+env/
+
+# IDE settings
+.vscode/
+.idea/
