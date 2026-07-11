@@ -57,42 +57,4 @@ def test_login_with_wrong_password_fails():
 # STUDENT TESTS
 # ==========================================
 
-def get_auth_token():
-    """Helper: signs up + logs in a fresh user, returns an access token."""
-    client.post("/auth/signup", json={"username": "studentmgr", "password": "pass123"})
-    response = client.post(
-        "/auth/login",
-        data={"username": "studentmgr", "password": "pass123"},
-    )
-    return response.json()["access_token"]
 
-
-def test_create_student_requires_auth():
-    # No Authorization header sent -> should be rejected
-    response = client.post(
-        "/students/",
-        json={"name": "Alice", "age": 20, "year": "2nd"},
-    )
-    assert response.status_code == 401
-
-
-def test_create_student_with_auth_succeeds():
-    token = get_auth_token()
-    response = client.post(
-        "/students/",
-        json={"name": "Bob", "age": 21, "year": "3rd"},
-        headers={"Authorization": f"Bearer {token}"},
-    )
-    assert response.status_code == 201
-    assert response.json()["name"] == "Bob"
-
-
-def test_get_all_students_is_public():
-    # No token needed for reading
-    response = client.get("/students/")
-    assert response.status_code == 200
-
-
-def test_get_nonexistent_student_returns_404():
-    response = client.get("/students/99999")
-    assert response.status_code == 404

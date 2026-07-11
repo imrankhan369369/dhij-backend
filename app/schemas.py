@@ -1,38 +1,11 @@
 from pydantic import BaseModel
 from typing import Optional
 
-
 # ==========================================
 # STUDENT SCHEMAS
 # ==========================================
 
-# What the client must SEND when creating a student
-class StudentCreate(BaseModel):
-    name: str
-    age: int
-    year: str
 
-
-# What the client can SEND when updating (all fields optional)
-class UpdateStudent(BaseModel):
-    name: Optional[str] = None
-    age: Optional[int] = None
-    year: Optional[str] = None
-
-
-# What the API SENDS BACK for a student
-# Having this separate from StudentCreate matters once fields differ
-# (e.g. if you add "created_at" or hide internal fields later)
-class StudentResponse(BaseModel):
-    id: int
-    name: str
-    age: int
-    year: str
-
-    class Config:
-        # This tells Pydantic: "it's OK to build this schema
-        # from a SQLAlchemy object, not just a plain dict"
-        from_attributes = True
 
 
 # ==========================================
@@ -64,3 +37,39 @@ class Token(BaseModel):
 # What the client sends to get a new access token
 class RefreshRequest(BaseModel):
     refresh_token: str
+
+
+class ProviderCreate(BaseModel):
+    name: str
+    offering: str
+    bio: str
+
+
+class ProviderResponse(BaseModel):
+    id: int
+    name: str
+    offering: str
+    bio: str
+
+    class Config:
+        from_attributes = True
+
+
+from datetime import datetime
+
+
+class BookingCreate(BaseModel):
+    provider_id: int
+    scheduled_time: datetime
+
+
+class BookingResponse(BaseModel):
+    id: int
+    user_id: int
+    provider_id: int
+    scheduled_time: datetime
+    meeting_link: Optional[str] = None
+    status: str
+
+    class Config:
+        from_attributes = True
